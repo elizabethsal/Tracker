@@ -2,6 +2,8 @@ package com.example.tracker;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,11 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.tasks.Task;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "MapActivity";
 
@@ -26,6 +31,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //var
     private Boolean mLocationPermissionGranted = false;
     private GoogleMap mMap;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +40,44 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         getLocationPermission();
     }
+
+    private void getDeviceLocation() {
+        Log.d(TAG, "getDeviceLocation: getting the devices current location");
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        try {
+            if (mLocationPermissionGranted) {
+//начало фигни
+                Task<Location> location;
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                mFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompletionListener() {
+                    @Override
+   /*ее конец*/                 public void onComplete(@NonNull Task task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: current location!");
+                             Location currenrLocation = (Location) task.getResult();
+                        } else {
+                            Log.d(TAG, "onComplete: current location is null");
+                            Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        }catch (SecurityException e){
+            Log.e(TAG, "gerDeviceLocation: SecurityException: " + e.getMessage() );
+            }
+        }
 
     private void initMap(){
         Log.d(TAG, "initMap: initiliation map");
