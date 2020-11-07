@@ -17,13 +17,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback{
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onMapReady: map is ready");
-        mMap = googleMap;
-    }
-
     private static final String TAG = "MapActivity";
 
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -47,6 +40,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         SupportMapFragment  mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapActivity.this);
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onMapReady: map is ready");
+        mMap = googleMap;
+    }
+
 
     private void getLocationPermission(){
         Log.d(TAG, "getLocationPermission: getting location permissions");
