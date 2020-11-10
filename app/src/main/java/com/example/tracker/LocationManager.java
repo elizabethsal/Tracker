@@ -3,20 +3,15 @@ package com.example.tracker;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
-import android.view.View;
+
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-
-import static android.content.ContentValues.TAG;
 
 public class LocationManager extends LocationCallback {
 
